@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
        print_ipheader(iph);
 
         //if tcp
-        if (iph->ip_p == IPPROTO_TCP) // IPPROTO_TCP : 0x0006
+        if (iph->ip_p == IPPROTO_TCP) // IPPROTO_TCP : 0x06
         {
             tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
             print_tcpheader(tcph);
