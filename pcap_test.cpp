@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
        print_ipheader(iph);
 
         //if tcp
-        if (iph->ip_p == IPPROTO_TCP) // IPPROTO_TCP : 0x0006
+        if (iph->ip_p == IPPROTO_TCP) // IPPROTO_TCP : 0x06
         {
             tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
             print_tcpheader(tcph);
@@ -103,11 +103,18 @@ int main(int argc, char* argv[]) {
 
             //print data
             printf("DATA : ");
-            while(length-- && i <= 10)
-            {
-                printf("%02x ", *(packet++));
-                i++;
-            }
+		
+	    if(length == 0){
+		printf("----------not exist----------\n");
+	    }
+	    else{
+
+	            while(length-- && i <= 10)
+	            {
+	                printf("%02x ", *(packet++));
+	                i++;
+	            }
+	    }
     	    printf("\n==================END===================\n");
 	 }
 
