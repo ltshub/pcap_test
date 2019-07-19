@@ -23,6 +23,22 @@ void print_mac(struct ether_header *ep){
     printf("\n");
 }
 
+void print_ipheader(struct ip *iph){
+	printf("**IP packet**\n");
+        printf("Version     : %d\n", iph->ip_v);
+        printf("Header Len  : %d\n", iph->ip_hl);
+        printf("Ident       : %d\n", ntohs(iph->ip_id));
+        printf("TTL         : %d\n", iph->ip_ttl);
+        printf("Src Address : %s\n", inet_ntoa(iph->ip_src));
+        printf("Dst Address : %s\n\n", inet_ntoa(iph->ip_dst));
+}
+
+void print_tcpheader(struct tcphdr *tcpd){
+	printf("**TCP packet**\n");
+        printf("Src Port : %d\n" , ntohs(tcph->source));
+        printf("Dst Port : %d\n\n" , ntohs(tcph->dest));
+}
+
 int main(int argc, char* argv[]) {
   if (argc != 2) {
     usage();
@@ -71,28 +87,20 @@ int main(int argc, char* argv[]) {
     if (ether_type == ETHERTYPE_IP) //ETHERTYPE_IP : 0x0800
     {
         // ip header
-        iph = (struct ip *)packet;
-        printf("**IP packet**\n");
-        printf("Version     : %d\n", iph->ip_v);
-        printf("Header Len  : %d\n", iph->ip_hl);
-        printf("Ident       : %d\n", ntohs(iph->ip_id));
-        printf("TTL         : %d\n", iph->ip_ttl);
-        printf("Src Address : %s\n", inet_ntoa(iph->ip_src));
-        printf("Dst Address : %s\n\n", inet_ntoa(iph->ip_dst));
+       iph = (struct ip *)packet;
+       print_ipheader(iph);
 
         //if tcp
         if (iph->ip_p == IPPROTO_TCP) // 0x0006
         {
-	    printf("**TCP packet**\n");
-            tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
-            printf("Src Port : %d\n" , ntohs(tcph->source));
-            printf("Dst Port : %d\n\n" , ntohs(tcph->dest));
-
+	    tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
+            print_tcpheader(tcph);
+	    
             //ip_header 와 tcp_header size만큼 빼줌.
             packet += (iph->ip_hl * 4)+(tcph -> doff * 4);
 
             //print data
-	    printf("DATA : ");
+            printf("DATA : ");
             while(length-- && i <= 10)
             {
                 printf("%02x ", *(packet++));
