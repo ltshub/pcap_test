@@ -81,6 +81,7 @@ int main(int argc, char* argv[]) {
 
     //ether_header size 만큼 빼줌.
     packet += sizeof(struct ether_header);
+    length -= 14;
     ether_type = ntohs(ep->ether_type);
 
     //packet
@@ -91,13 +92,14 @@ int main(int argc, char* argv[]) {
        print_ipheader(iph);
 
         //if tcp
-        if (iph->ip_p == IPPROTO_TCP) // 0x0006
+        if (iph->ip_p == IPPROTO_TCP) // IPPROTO_TCP : 0x0006
         {
-	    tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
+            tcph = (struct tcphdr *)(packet + iph->ip_hl * 4);
             print_tcpheader(tcph);
 	    
             //ip_header 와 tcp_header size만큼 빼줌.
             packet += (iph->ip_hl * 4)+(tcph -> doff * 4);
+            length -= (iph->ip_hl * 4)+(tcph -> doff *4);
 
             //print data
             printf("DATA : ");
